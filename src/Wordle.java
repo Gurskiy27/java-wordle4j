@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -9,42 +10,26 @@ public class Wordle {
 
     public static void main(String[] args) {
 
-        PrintWriter log = null;
-
-        try {
-            log = new PrintWriter(
-                    LOG_FILE,
-                    StandardCharsets.UTF_8
-            );
-
-            Scanner scanner = new Scanner(
-                    System.in,
-                    StandardCharsets.UTF_8
-            );
+        try (PrintWriter log = new PrintWriter(
+                LOG_FILE,
+                StandardCharsets.UTF_8
+        );
+             Scanner scanner = new Scanner(
+                     System.in,
+                     StandardCharsets.UTF_8
+             )) {
 
             runGame(scanner, log);
 
-            scanner.close();
-
-        } catch (Exception e) {
-
-            if (log != null) {
-                e.printStackTrace(log);
-                log.flush();
-            }
-
-        } finally {
-
-            if (log != null) {
-                log.close();
-            }
+        } catch (DictionaryException | IOException | WordleException e) {
+            e.printStackTrace(System.err);
         }
     }
 
     private static void runGame(
             Scanner scanner,
             PrintWriter log)
-            throws Exception {
+            throws DictionaryException, WordleException, IOException {
 
         WordleDictionaryLoader loader =
                 new WordleDictionaryLoader();

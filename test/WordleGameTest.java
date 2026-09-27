@@ -270,4 +270,26 @@ class WordleGameTest {
                 second
         );
     }
+
+    @Test
+    void logContainsAttemptInfo() throws Exception {
+
+        StringWriter buffer = new StringWriter();
+        PrintWriter log = new PrintWriter(buffer);
+
+        WordleGame game =
+                new WordleGame(
+                        dictionary(),
+                        log,
+                        "слово"
+                );
+
+        game.makeAttempt("стена");
+
+        log.flush();
+
+        assertTrue(
+                buffer.toString().contains("Ход: стена")
+        );
+    }
 }
